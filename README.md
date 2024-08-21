@@ -29,3 +29,7 @@ git clone https://github.com/hanwckf/hd2312.git
 cd hd2312
 make KDIR=<path/to/kernelsource>
 ```
+
+#### 参考资料
+- https://www.cnblogs.com/DirWang/p/17063658.html
+- https://www.linuxtv.org/wiki/index.php/LeTV_DTMB_USB_stick
