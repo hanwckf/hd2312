@@ -1,10 +1,10 @@
 KVERSION ?= $(shell uname -r)
+KDIR ?= /lib/modules/$(KVERSION)/build
 CURDIR := $(shell pwd)
-KDIR := /lib/modules/$(KVERSION)/build
 
 hd2312-objs := hdic_hd2312.o
 
-include /lib/modules/$(KVERSION)/build/.config
+include $(KDIR)/.config
 
 FLAGS := -I$(KDIR)/drivers/media/usb/dvb-usb -I$(KDIR)/drivers/media/dvb-frontends -I$(CURDIR)/dvb-usb
 
@@ -18,7 +18,7 @@ endif
 obj-m := hd2312.o hd2312-fe.o
 
 all:
-	$(MAKE) -C /lib/modules/$(KVERSION)/build M=$(CURDIR) EXTRA_CFLAGS="$(FLAGS)" modules
+	$(MAKE) -C $(KDIR) M=$(CURDIR) EXTRA_CFLAGS="$(FLAGS)" modules
 
 clean:
-	$(MAKE) -C /lib/modules/$(KVERSION)/build M=$(CURDIR) clean
+	$(MAKE) -C $(KDIR) M=$(CURDIR) clean
