@@ -56,6 +56,19 @@ cd hd2312
 make KDIR=<path/to/kernelsource>
 ```
 
+#### 使用说明
+
+1. tvheadend里选择DVB-T制式，填入频率即可，其它解调设置选择AUTO
+![tvheadend](pics/tvheadend.png)
+
+
+2. 支持dvb-fe-tool, dvbv5-scan, dvbv5-zap等基于dvbv5api的Linux工具
+![dvb-fe-tool](pics/dvb-fe-tool.jpg)
+![dvbv5-scan](pics/dvbv5-scan.jpg)
+
+#### 已知问题
+1. openwrt下拔出USB后，udev无法自动移除`/dev/dvb/adapter*`节点，待修复。其它主流Linux发行版无此问题。
+
 #### 参考资料
 - https://www.cnblogs.com/DirWang/p/17063658.html
 - https://www.linuxtv.org/wiki/index.php/LeTV_DTMB_USB_stick
