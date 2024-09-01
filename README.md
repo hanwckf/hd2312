@@ -40,6 +40,28 @@ make V=s
 
 ```
 
+#### 使用LibreELEC/CoreELEC编译
+```shell
+# 下载源码
+git clone https://github.com/hanwckf/hd2312.git
+cd hd2312
+
+# 创建hd2312软件包
+mkdir <LibreELEC-source>/packages/linux-drivers/HD2312
+cp libreelec/package.mk <LibreELEC-source>/packages/linux-drivers/HD2312/
+
+# 修改编译设置
+cd <LibreELEC-source>
+# 对于LibreELEC
+echo 'ADDITIONAL_DRIVERS+=" HD2312"' >> ./distributions/LibreELEC/options
+# 对于CoreELEC
+echo 'ADDITIONAL_DRIVERS+=" HD2312"' >> ./distributions/CoreELEC/options
+
+# 开始编译
+# PROJECT=Generic ARCH=x86_64 make image
+# PROJECT=Amlogic-ce ARCH=aarch64 make image
+```
+
 #### 使用Linux源码树编译
 
 ```shell
