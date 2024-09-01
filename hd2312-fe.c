@@ -7,6 +7,7 @@
 #include <linux/slab.h>
 #include <linux/dvb/frontend.h>
 #include <linux/types.h>
+#include <linux/version.h>
 
 #include "dvb-usb.h"
 #include "hd2312.h"
@@ -226,9 +227,15 @@ static const struct dvb_frontend_ops hd2312_ops = {
 	.delsys = { SYS_DVBT },
 	.info = {
 		.name = "HDIC HD2312",
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4, 15, 0)
 		.frequency_min_hz = 474 * MHz,
 		.frequency_max_hz = 858 * MHz,
 		.frequency_stepsize_hz = 10000,
+#else
+		.frequency_min = 474000000,
+		.frequency_max = 858000000,
+		.frequency_stepsize = 10000,
+#endif
 		.caps = FE_CAN_FEC_AUTO | FE_CAN_QAM_AUTO | FE_CAN_TRANSMISSION_MODE_AUTO 
 			| FE_CAN_BANDWIDTH_AUTO | FE_CAN_GUARD_INTERVAL_AUTO | FE_CAN_HIERARCHY_AUTO,
 	},
