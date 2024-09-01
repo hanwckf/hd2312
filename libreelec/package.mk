@@ -2,8 +2,8 @@
 # Copyright (C) 2024 hanwckf
 
 PKG_NAME="HD2312"
-PKG_VERSION="c0ec05bdd41e514e2f8371848750488b5fb2547d"
-PKG_SHA256="26568b4f09d21e4e265c4b9ef3f6c277d009a4b2f3b10ea29dea2a858fb40ff6"
+PKG_VERSION="59c4dbfdc504c1230948f63fe5b0a47ca6c71bf8"
+PKG_SHA256="4e72adcd55687db975920d21c600d7f981dc9941d01a64516113bd336f434d8d"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/hanwckf/hd2312"
 PKG_URL="https://github.com/hanwckf/hd2312/archive/${PKG_VERSION}.tar.gz"
