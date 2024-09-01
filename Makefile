@@ -4,7 +4,7 @@ CURDIR := $(shell pwd)
 
 hd2312-objs := hdic_hd2312.o
 
-FLAGS := -I$(KDIR)/drivers/media/usb/dvb-usb -I$(KDIR)/drivers/media/dvb-frontends
+FLAGS := -I$(KDIR)/drivers/media/usb/dvb-usb -I$(KDIR)/drivers/media/dvb-frontends -I$(KDIR)/drivers/media/dvb-core
 
 ifndef CONFIG_DVB_USB
 FLAGS += -I$(CURDIR)/dvb-usb
