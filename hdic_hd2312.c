@@ -37,11 +37,9 @@ static int hd2312_probe(struct usb_interface *intf,
 		return -ENOMEM;
 
 	ret = usb_control_msg(udev, usb_rcvctrlpipe(udev, 0),
-					0xED,
-					0xC0,
-					0xFE,
-					0, buf, 4,
-					500);
+					CYUSB_HD2312_GET_VERSION,
+					USB_TYPE_VENDOR | USB_DIR_IN,
+					0xFE, 0, buf, 4, 500);
 
 	if (ret != 4)
 		goto err;
@@ -62,7 +60,7 @@ static int hd2312_streaming_ctrl(struct dvb_usb_adapter *adpt, int onoff)
 
 	pr_debug("%s: onoff=%d\n", __func__, onoff);
 
-	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0), (onoff ? 0xab : 0xac), 0x40, 0xFE, 0, NULL, 0, 0);
+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0), (onoff ? 0xab : 0xac), USB_TYPE_VENDOR, 0xFE, 0, NULL, 0, 0);
 
 	return ret;
 }
@@ -74,7 +72,7 @@ static int hd2312_power_ctrl(struct dvb_usb_device *d, int onoff)
 
 	pr_debug("%s: onoff=%d\n", __func__, onoff);
 
-	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0), (onoff ? 0xad : 0xae), 0x40, 0xFE, 0, NULL, 0, 0);
+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0), (onoff ? 0xad : 0xae), USB_TYPE_VENDOR, 0xFE, 0, NULL, 0, 0);
 
 	return ret;
 }

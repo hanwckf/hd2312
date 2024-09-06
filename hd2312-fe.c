@@ -11,6 +11,7 @@
 
 #include "dvb-usb.h"
 #include "hd2312.h"
+
 static const struct dvb_frontend_ops hd2312_ops;
 
 struct dvb_frontend *hd2312_attach(struct dvb_usb_device *dev)
@@ -69,7 +70,11 @@ static int hd2312_set_frontend(struct dvb_frontend *fe)
 
 	pr_debug("hd2312: set freq %d Hz\n", freq);
 
-	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0), 0xFC, 0x40, 0xFE, 0, buf, 4, 500);
+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+		CYUSB_HD2312_SET_FREQ,
+		USB_TYPE_VENDOR,
+		0xFE, 0, buf, 4, 500);
+
 	state->frequency = fe->dtv_property_cache.frequency;
 
 	kfree(buf);
@@ -89,13 +94,20 @@ static int hd2312_get_frontend(struct dvb_frontend *fe,
 {
 	struct hd2312_state *state = fe->demodulator_priv;
 	struct usb_device *dev;
+	int ret;
 
 	u8 *data = state->status;
 
 	c->frequency = state->frequency;
 
 	dev = state->dev->udev;
-	if (usb_control_msg(dev, usb_rcvctrlpipe(dev, 0), 0xE7, 0xC0, 0xFE, 0, data, 6, 500) != 6)
+
+	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
+		CYUSB_HD2312_GET_FRONTEND,
+		USB_TYPE_VENDOR | USB_DIR_IN,
+		0xFE, 0, data, 6, 500);
+
+	if (ret != 6)
 		return 0;
 
 	pr_debug("%s: fe status: %02X, %02X, %02X, %02X, %02X, %02X\n", __func__,
@@ -177,7 +189,11 @@ static int hd2312_read_status(struct dvb_frontend *fe, enum fe_status *status)
 	*status = 0;
 
 	dev = state->dev->udev;
-	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0), 0xEA, 0xC0, 0xFE, 0, isLock, 1, 500);
+
+	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
+		CYUSB_HD2312_GET_LOCK,
+		USB_TYPE_VENDOR | USB_DIR_IN,
+		0xFE, 0, isLock, 1, 500);
 
 	pr_debug("%s: isLock: %02X\n", __func__, *isLock);
 
@@ -197,16 +213,25 @@ static int hd2312_read_status(struct dvb_frontend *fe, enum fe_status *status)
 	}
 
 	/* get signal strength */
-	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0), 0xEB, 0xC0, 0xFE, 0, buf, 4, 500);
+	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
+		CYUSB_HD2312_GET_STRENGTH,
+		USB_TYPE_VENDOR | USB_DIR_IN,
+		0xFE, 0, buf, 4, 500);
+
 	if (ret == 4) {
 		pr_debug("%s: strength: %02X, %02X, %02X, %02X\n", __func__, buf[0], buf[1], buf[2], buf[3]);
 
 		c->strength.stat[0].scale = FE_SCALE_RELATIVE;
-		c->strength.stat[0].uvalue = buf[3] * 0xffff / 0x64;
+		/* scale to 0xffff */
+		c->strength.stat[0].uvalue = buf[3] * 0xffff / 100;
 	}
 
 	/* get snr */
-	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0), 0xE8, 0xC0, 0xFE, 0, buf, 2, 500);
+	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
+		CYUSB_HD2312_GET_SNR,
+		USB_TYPE_VENDOR | USB_DIR_IN,
+		0xFE, 0, buf, 2, 500);
+
 	if (ret == 2) {
 		pr_debug("%s: snr: %02X, %02X\n", __func__, buf[0], buf[1]);
 
